@@ -75,14 +75,12 @@ WSGI_APPLICATION = 'proygrupo.wsgi.application'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
-        'NAME':  '',
+        'NAME': 'controlinventario',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '212121',
         'HOST': 'localhost',
-        'PORT':'3307',
+        'PORT': '3306',
     }
 }
 
@@ -109,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
