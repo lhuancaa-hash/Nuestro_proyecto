@@ -13,17 +13,17 @@ class MovimientoStockForm(forms.ModelForm):
     
     class Meta:
         model = MovimientoStock
-        fields = ['producto', 'tipo', 'cantidad', 'ubicacion', 'descripcion']
+        fields = ['id_prod', 'tipo', 'cantidad', 'usuario', 'motivo']
         widgets = {
-            'producto': forms.Select(attrs={'class': 'form-control'}),
+            'id_prod': forms.Select(attrs={'class': 'form-control'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'ubicacion': forms.TextInput(attrs={'class': 'form-control'}),
-            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Motivo del movimiento...'}),
+            'usuario': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del usuario...'}),
+            'motivo': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Motivo del movimiento...'}),
         }
         labels = {
-            'producto': 'Producto',
+            'id_prod': 'Producto',
             'tipo': 'Tipo de Movimiento',
             'cantidad': 'Cantidad',
-            'ubicacion': 'Ubicación',
-            'descripcion': 'Descripción/Motivo',
+            'usuario': 'Usuario',
+            'motivo': 'Motivo',
         }

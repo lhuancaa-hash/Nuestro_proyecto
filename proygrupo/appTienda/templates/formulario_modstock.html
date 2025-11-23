@@ -11,11 +11,11 @@
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="{{ form.producto.id_for_label }}" class="form-label">{{ form.producto.label }}</label>
-                {{ form.producto }}
-                {% if form.producto.errors %}
+                <label for="{{ form.id_prod.id_for_label }}" class="form-label">{{ form.id_prod.label }}</label>
+                {{ form.id_prod }}
+                {% if form.id_prod.errors %}
                 <div class="text-danger">
-                    {{ form.producto.errors }}
+                    {{ form.id_prod.errors }}
                 </div>
                 {% endif %}
             </div>
@@ -38,26 +38,27 @@
                     {{ form.cantidad.errors }}
                 </div>
                 {% endif %}
+                <div class="form-text">La cantidad debe ser un número positivo mayor a 0</div>
             </div>
         </div>
         
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="{{ form.ubicacion.id_for_label }}" class="form-label">{{ form.ubicacion.label }}</label>
-                {{ form.ubicacion }}
-                {% if form.ubicacion.errors %}
+                <label for="{{ form.usuario.id_for_label }}" class="form-label">{{ form.usuario.label }}</label>
+                {{ form.usuario }}
+                {% if form.usuario.errors %}
                 <div class="text-danger">
-                    {{ form.ubicacion.errors }}
+                    {{ form.usuario.errors }}
                 </div>
                 {% endif %}
             </div>
             
             <div class="mb-3">
-                <label for="{{ form.descripcion.id_for_label }}" class="form-label">{{ form.descripcion.label }}</label>
-                {{ form.descripcion }}
-                {% if form.descripcion.errors %}
+                <label for="{{ form.motivo.id_for_label }}" class="form-label">{{ form.motivo.label }}</label>
+                {{ form.motivo }}
+                {% if form.motivo.errors %}
                 <div class="text-danger">
-                    {{ form.descripcion.errors }}
+                    {{ form.motivo.errors }}
                 </div>
                 {% endif %}
             </div>
