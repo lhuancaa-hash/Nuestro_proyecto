@@ -68,3 +68,36 @@ def eliminar_stock(request, id):
         stock.delete()
         return redirect('listar_stock')
     return redirect('listar_stock')
+# ====== CRUD PROVEEDOR ============
+from .models import Proveedor
+from .forms import ProveedorForm
+def lista_proveedores(request):
+    proveedores = Proveedor.objects.all()
+    print(">>> VISTA EJECUTADA <<<")
+    return render(request, 'lista_prov.html', {'proveedores': proveedores})
+
+def crear_proveedor(request):
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proveedores')
+    else:
+        form = ProveedorForm()
+    return render(request, 'crear_prov.html', {'form': form})  # FIX
+
+def actualizar_proveedor(request, id_prov):
+    proveedor = get_object_or_404(Proveedor, id_prov=id_prov)
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proveedores')
+    else:
+        form = ProveedorForm(instance=proveedor)
+    return render(request, 'actualizar_prov.html', {'form': form})  # FIX
+
+def eliminar_proveedor(request, id_prov):
+    proveedor = get_object_or_404(Proveedor, id_prov=id_prov)
+    proveedor.delete()
+    return redirect('lista_proveedores')

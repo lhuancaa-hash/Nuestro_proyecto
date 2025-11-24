@@ -61,3 +61,4 @@ class MovimientoStock(models.Model):
 
     class Meta:
         db_table = 'movimiento_stock'
+

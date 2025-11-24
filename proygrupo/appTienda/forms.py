@@ -1,6 +1,7 @@
 from django import forms
 from .models import MovimientoStock
 from .models import Stock
+from .models import Proveedor
 
 class MovimientoStockForm(forms.ModelForm):
     cantidad = forms.IntegerField(
@@ -60,4 +61,21 @@ class StockForm(forms.ModelForm):
             'cantidad': 'Cantidad',
             'ubicacion': 'Ubicación',
             'stock_minimo': 'Stock mínimo',
+        }
+class ProveedorForm(forms.ModelForm):
+    class Meta:
+        model = Proveedor
+        fields = ['nombre', 'telefono', 'direccion', 'rubro']
+
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'rubro': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'nombre': 'Nombre',
+            'telefono': 'Teléfono',
+            'direccion': 'Dirección',
+            'rubro': 'Rubro',
         }
