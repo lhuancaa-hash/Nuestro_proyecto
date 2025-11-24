@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Modificar Producto{% endblock %}
+{% block content %}
+<h1 class="mb-4">Modificar Producto #{{ producto.id_prod }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="mb-3">
+                <label for="{{ form.nombre.id_for_label }}" class="form-label">{{ form.nombre.label }}</label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                <div class="text-danger">
+                    {{ form.nombre.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.categoria.id_for_label }}" class="form-label">{{ form.categoria.label }}</label>
+                {{ form.categoria }}
+                {% if form.categoria.errors %}
+                <div class="text-danger">
+                    {{ form.categoria.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.unidad_medida.id_for_label }}" class="form-label">{{ form.unidad_medida.label }}</label>
+                {{ form.unidad_medida }}
+                {% if form.unidad_medida.errors %}
+                <div class="text-danger">
+                    {{ form.unidad_medida.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="mb-3">
+                <label for="{{ form.precio_compra.id_for_label }}" class="form-label">{{ form.precio_compra.label }}</label>
+                {{ form.precio_compra }}
+                {% if form.precio_compra.errors %}
+                <div class="text-danger">
+                    {{ form.precio_compra.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.precio_venta.id_for_label }}" class="form-label">{{ form.precio_venta.label }}</label>
+                {{ form.precio_venta }}
+                {% if form.precio_venta.errors %}
+                <div class="text-danger">
+                    {{ form.precio_venta.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.id_prov.id_for_label }}" class="form-label">{{ form.id_prov.label }}</label>
+                {{ form.id_prov }}
+                {% if form.id_prov.errors %}
+                <div class="text-danger">
+                    {{ form.id_prov.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+
+</form>
+{% endblock %}
