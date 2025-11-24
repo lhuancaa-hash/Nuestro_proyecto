@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{{ titulo }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Producto -->
+            <div class="mb-3">
+                <label for="{{ form.id_prod.id_for_label }}" class="form-label">{{ form.id_prod.label }}</label>
+                {{ form.id_prod }}
+                {% if form.id_prod.errors %}
+                    <div class="text-danger">{{ form.id_prod.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Cantidad -->
+            <div class="mb-3">
+                <label for="{{ form.cantidad.id_for_label }}" class="form-label">{{ form.cantidad.label }}</label>
+                {{ form.cantidad }}
+                {% if form.cantidad.errors %}
+                    <div class="text-danger">{{ form.cantidad.errors }}</div>
+                {% endif %}
+                <div class="form-text">La cantidad debe ser un número positivo.</div>
+            </div>
+
+            <!-- Stock mínimo -->
+            <div class="mb-3">
+                <label for="{{ form.stock_minimo.id_for_label }}" class="form-label">{{ form.stock_minimo.label }}</label>
+                {{ form.stock_minimo }}
+                {% if form.stock_minimo.errors %}
+                    <div class="text-danger">{{ form.stock_minimo.errors }}</div>
+                {% endif %}
+                <div class="form-text">Indica el stock mínimo recomendado.</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Ubicación -->
+            <div class="mb-3">
+                <label for="{{ form.ubicacion.id_for_label }}" class="form-label">{{ form.ubicacion.label }}</label>
+                {{ form.ubicacion }}
+                {% if form.ubicacion.errors %}
+                    <div class="text-danger">{{ form.ubicacion.errors }}</div>
+                {% endif %}
+                <div class="form-text">Opcional: indica la ubicación del stock.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'listar_stock' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}
