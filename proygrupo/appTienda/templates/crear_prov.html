@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">{{ titulo }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label class="form-label" for="{{ form.nombre.id_for_label }}">
+                    {{ form.nombre.label }}
+                </label>
+                {{ form.nombre }}
+                {% if form.nombre.errors %}
+                <div class="text-danger">{{ form.nombre.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Teléfono -->
+            <div class="mb-3">
+                <label class="form-label" for="{{ form.telefono.id_for_label }}">
+                    {{ form.telefono.label }}
+                </label>
+                {{ form.telefono }}
+                {% if form.telefono.errors %}
+                <div class="text-danger">{{ form.telefono.errors }}</div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <!-- Dirección -->
+            <div class="mb-3">
+                <label class="form-label" for="{{ form.direccion.id_for_label }}">
+                    {{ form.direccion.label }}
+                </label>
+                {{ form.direccion }}
+                {% if form.direccion.errors %}
+                <div class="text-danger">{{ form.direccion.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Rubro -->
+            <div class="mb-3">
+                <label class="form-label" for="{{ form.rubro.id_for_label }}">
+                    {{ form.rubro.label }}
+                </label>
+                {{ form.rubro }}
+                {% if form.rubro.errors %}
+                <div class="text-danger">{{ form.rubro.errors }}</div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">💾 Guardar</button>
+        <a href="{% url 'lista_proveedores' %}" class="btn btn-secondary btn-lg">Cancelar</a>
+    </div>
+
+</form>
+
+{% endblock %}

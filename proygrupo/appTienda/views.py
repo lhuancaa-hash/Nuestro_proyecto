@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import MovimientoStock
 from .forms import MovimientoStockForm
-from .models import Producto
-from .forms import ProductoForm
+from .models import Stock
+from .forms import StockForm
 
 def listar_movimientos(request):
     movimientos = MovimientoStock.objects.all().order_by('id_mov')
@@ -35,35 +35,69 @@ def eliminar_movimiento(request, id):
         movimiento.delete()
         return redirect('listar_movimientos')
     return redirect('listar_movimientos')
-
-def listar_productos(request):
-    productos = Producto.objects.all().order_by('id_prod')
-    return render(request, 'listar_productos.html', {'productos': productos})
-
-def crear_producto(request):
+# ====== CRUD STOCK ============
+# READ
+def listar_stock(request):
+    stocks = Stock.objects.all()
+    return render(request, 'listar_stock.html', {'stocks': stocks})
+# CREATE
+def crear_stock(request):
     if request.method == 'POST':
-        form = ProductoForm(request.POST)
+        form = StockForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect('listar_stock')
     else:
-        form = ProductoForm()
-    return render(request, 'formulario_producto.html', {'form': form, 'titulo': 'Crear Producto'})
-
-def modificar_producto(request, id):
-    producto = get_object_or_404(Producto, id_prod=id)
+        form = StockForm()
+    return render(request, 'formulario_stock.html', {'form': form, 'titulo': 'Crear Stock'})
+#M MODIFICAR
+def modificar_stock(request, id):
+    stock = get_object_or_404(Stock, id_stock=id)
     if request.method == 'POST':
-        form = ProductoForm(request.POST, instance=producto)
+        form = StockForm(request.POST, instance=stock)
         if form.is_valid():
             form.save()
-            return redirect('listar_productos')
+            return redirect('listar_stock')
     else:
-        form = ProductoForm(instance=producto)
-    return render(request, 'modificar_producto.html', {'form': form, 'producto': producto})
-
-def eliminar_producto(request, id):
-    producto = get_object_or_404(Producto, id_prod=id)
+        form = StockForm(instance=stock)
+    return render(request, 'formulario_stock.html', {'form': form, 'stock': stock})
+# ELIMINAR 
+def eliminar_stock(request, id):
+    stock = get_object_or_404(Stock, id_stock=id)
     if request.method == 'POST':
-        producto.delete()
-        return redirect('listar_productos')
-    return redirect('listar_productos')
+        stock.delete()
+        return redirect('listar_stock')
+    return redirect('listar_stock')
+# ====== CRUD PROVEEDOR ============
+from .models import Proveedor
+from .forms import ProveedorForm
+def lista_proveedores(request):
+    proveedores = Proveedor.objects.all()
+    print(">>> VISTA EJECUTADA <<<")
+    return render(request, 'lista_prov.html', {'proveedores': proveedores})
+
+def crear_proveedor(request):
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proveedores')
+    else:
+        form = ProveedorForm()
+    return render(request, 'crear_prov.html', {'form': form})  # FIX
+
+def actualizar_proveedor(request, id_prov):
+    proveedor = get_object_or_404(Proveedor, id_prov=id_prov)
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_proveedores')
+    else:
+        form = ProveedorForm(instance=proveedor)
+    return render(request, 'actualizar_prov.html', {'form': form})  # FIX
+
+def eliminar_proveedor(request, id_prov):
+    proveedor = get_object_or_404(Proveedor, id_prov=id_prov)
+    proveedor.delete()
+    return redirect('lista_proveedores')

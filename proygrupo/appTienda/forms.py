@@ -1,6 +1,7 @@
 from django import forms
 from .models import MovimientoStock
-from .models import Producto
+from .models import Stock
+from .models import Proveedor
 
 class MovimientoStockForm(forms.ModelForm):
     cantidad = forms.IntegerField(
@@ -27,25 +28,54 @@ class MovimientoStockForm(forms.ModelForm):
             'cantidad': 'Cantidad',
             'usuario': 'Usuario',
             'motivo': 'Motivo',
-
         }
-class ProductoForm(forms.ModelForm):
+
+class StockForm(forms.ModelForm):
+    cantidad = forms.IntegerField(
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': '0'
+        }),
+        label='Cantidad'
+    )
+    
+    stock_minimo = forms.IntegerField(
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'min': '0'
+        }),
+        label='Stock mínimo'
+    )
+
     class Meta:
-        model = Producto
-        fields = ['nombre', 'categoria', 'precio_compra', 'precio_venta', 'unidad_medida', 'id_prov']
+        model = Stock
+        fields = ['id_prod', 'cantidad', 'ubicacion', 'stock_minimo']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'categoria': forms.TextInput(attrs={'class': 'form-control'}),
-            'precio_compra': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'precio_venta': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'unidad_medida': forms.TextInput(attrs={'class': 'form-control'}),
-            'id_prov': forms.Select(attrs={'class': 'form-control'}),
+            'id_prod': forms.Select(attrs={'class': 'form-control'}),
+            'ubicacion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ubicación del stock...'}),
         }
         labels = {
-            'nombre': 'Nombre del Producto',
-            'categoria': 'Categoría',
-            'precio_compra': 'Precio de Compra',
-            'precio_venta': 'Precio de Venta',
-            'unidad_medida': 'Unidad de Medida',
-            'id_prov': 'Proveedor',
+            'id_prod': 'Producto',
+            'cantidad': 'Cantidad',
+            'ubicacion': 'Ubicación',
+            'stock_minimo': 'Stock mínimo',
+        }
+class ProveedorForm(forms.ModelForm):
+    class Meta:
+        model = Proveedor
+        fields = ['nombre', 'telefono', 'direccion', 'rubro']
+
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'rubro': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'nombre': 'Nombre',
+            'telefono': 'Teléfono',
+            'direccion': 'Dirección',
+            'rubro': 'Rubro',
         }
