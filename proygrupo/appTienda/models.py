@@ -56,9 +56,51 @@ class MovimientoStock(models.Model):
     usuario = models.CharField(max_length=100, blank=True, null=True, db_column='usuario')
     motivo = models.CharField(max_length=200, blank=True, null=True, db_column='motivo')
 
+    def save(self, *args, **kwargs):
+
+        # Obtener el stock asociado al producto
+        try:
+            stock = Stock.objects.get(id_prod=self.id_prod)
+        except Stock.DoesNotExist:
+            raise ValueError("No existe un registro de stock para este producto.")
+
+        # Solo modificar stock si es un nuevo movimiento
+        if not self.pk:
+            if self.tipo == 'E':  # Entrada
+                stock.cantidad += self.cantidad
+            elif self.tipo == 'S':  # Salida
+                if stock.cantidad < self.cantidad:
+                    raise ValueError("No hay suficiente stock para realizar esta salida.")
+                stock.cantidad -= self.cantidad
+
+            stock.save()
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.get_tipo_display()} - {self.id_prod.nombre} - {self.cantidad}"
 
     class Meta:
         db_table = 'movimiento_stock'
+
+
+"""class MovimientoStock(models.Model):
+    TIPO_CHOICES = [
+        ('E', 'Entrada'),
+        ('S', 'Salida'),
+    ]
+    
+    id_mov = models.AutoField(primary_key=True, db_column='id_mov')
+    id_prod = models.ForeignKey(Producto, on_delete=models.CASCADE, db_column='id_prod')
+    tipo = models.CharField(max_length=1, choices=TIPO_CHOICES, db_column='tipo')
+    cantidad = models.IntegerField(validators=[MinValueValidator(1)], db_column='cantidad')
+    fecha = models.DateTimeField(auto_now_add=True, db_column='fecha')
+    usuario = models.CharField(max_length=100, blank=True, null=True, db_column='usuario')
+    motivo = models.CharField(max_length=200, blank=True, null=True, db_column='motivo')
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} - {self.id_prod.nombre} - {self.cantidad}"
+
+    class Meta:
+        db_table = 'movimiento_stock'"""
 
