@@ -39,7 +39,17 @@
                         <a href="{% url 'modificar_stock' s.id_stock %}" class="btn btn-warning btn-sm">✏️ Modificar</a>
                         <form action="{% url 'eliminar_stock' s.id_stock %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Eliminar</button>
+
+
+
+
+                            <button type="button" class="btn btn-danger btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#eliminarModal" 
+                                    data-url="{% url 'eliminar_stock' s.id_stock %}">
+                                🗑️ Eliminar
+                            </button>
+
                         </form>
                     </div>
                 </td>
@@ -58,4 +68,57 @@
         </tbody>
     </table>
 </div>
+<div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+</div>
+
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar este stock?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form id="formEliminar" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    var eliminarModal = document.getElementById('eliminarModal')
+    eliminarModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var url = button.getAttribute('data-url')
+        var form = document.getElementById('formEliminar')
+        form.action = url
+    })
+</script>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    {% for s in stocks %}
+        {% if s.cantidad <= s.stock_minimo %}
+            <div class="toast show mb-2" role="alert" style="background-color: #dc3545; color: white; border-radius: 0.5rem;">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ⚠️ Stock insuficiente de {{ s.id_prod.nombre }} ({{ s.cantidad }})
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+
 {% endblock %}

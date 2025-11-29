@@ -9,10 +9,10 @@ urlpatterns = [
     path('stock/', views.listar_stock, name='listar_stock'),
     path('stock/crear/', views.crear_stock, name='crear_stock'),
     path('stock/modificar/<int:id>/', views.modificar_stock, name='modificar_stock'),
-    path('stock/eliminar/<int:id>/', views.eliminar_stock, name='eliminar_stock'),
-    
+    path('stock/eliminar/<int:id>/', views.eliminar_stock, name='eliminar_stock'),   
     path('proveedor/', views.lista_proveedores, name='lista_proveedores'),
     path('proveedor/crear/', views.crear_proveedor, name='crear_proveedor'),
     path('proveedor/actualizar/<int:id_prov>/', views.actualizar_proveedor, name='actualizar_proveedor'),
     path('proveedor/eliminar/<int:id_prov>/', views.eliminar_proveedor, name='eliminar_proveedor'),
+    path('pagina_principal/', views.pagina_principal,name='pagina_principal'),
 ]

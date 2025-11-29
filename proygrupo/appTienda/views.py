@@ -3,7 +3,22 @@ from .models import MovimientoStock
 from .forms import MovimientoStockForm
 from .models import Stock
 from .forms import StockForm
+from django.db.models import F
 
+
+def pagina_principal(request):
+    # Traer todos los stocks con cantidad <= stock_minimo
+    stocks_criticos = Stock.objects.filter(cantidad__lte=F('stock_minimo'))
+
+    context = {
+        'stocks_criticos': stocks_criticos,
+        # otros contextos que ya tengas
+    }
+    return render(request, 'principal.html', context)
+
+
+
+#-------------------------------
 def listar_movimientos(request):
     movimientos = MovimientoStock.objects.all().order_by('id_mov')
     return render(request, 'listar_modstock.html', {'movimientos': movimientos})
