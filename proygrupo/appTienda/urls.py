@@ -15,4 +15,8 @@ urlpatterns = [
     path('proveedor/actualizar/<int:id_prov>/', views.actualizar_proveedor, name='actualizar_proveedor'),
     path('proveedor/eliminar/<int:id_prov>/', views.eliminar_proveedor, name='eliminar_proveedor'),
     path('pagina_principal/', views.pagina_principal,name='pagina_principal'),
+    path('productos/', views.listar_productos, name='listar_productos'),
+    path('productos/crear/', views.crear_producto, name='crear_producto'),
+    path('productos/modificar/<int:id>/', views.modificar_producto, name='modificar_producto'),
+    path('productos/eliminar/<int:id>/', views.eliminar_producto, name='eliminar_producto'),
 ]
