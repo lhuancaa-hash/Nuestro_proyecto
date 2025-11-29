@@ -5,6 +5,8 @@ from .models import Stock
 from .forms import StockForm
 from django.db.models import F
 
+from .models import Producto
+from .forms import ProductoForm
 
 def pagina_principal(request):
     # Traer todos los stocks con cantidad <= stock_minimo
@@ -116,3 +118,37 @@ def eliminar_proveedor(request, id_prov):
     proveedor = get_object_or_404(Proveedor, id_prov=id_prov)
     proveedor.delete()
     return redirect('lista_proveedores')
+
+
+
+def listar_productos(request):
+    productos = Producto.objects.all().order_by('id_prod')
+    return render(request, 'listar_productos.html', {'productos': productos})
+
+def crear_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_productos')
+    else:
+        form = ProductoForm()
+    return render(request, 'formulario_producto.html', {'form': form, 'titulo': 'Crear Producto'})
+
+def modificar_producto(request, id):
+    producto = get_object_or_404(Producto, id_prod=id)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_productos')
+    else:
+        form = ProductoForm(instance=producto)
+    return render(request, 'modificar_producto.html', {'form': form, 'producto': producto})
+
+def eliminar_producto(request, id):
+    producto = get_object_or_404(Producto, id_prod=id)
+    if request.method == 'POST':
+        producto.delete()
+        return redirect('listar_productos')
+    return redirect('listar_productos')
