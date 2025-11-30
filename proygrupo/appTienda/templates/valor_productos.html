@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Valor de Productos{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4 text-center">💰 Valor de cada Producto (Precio de Compra)</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad en Stock</th>
+                    <th>Precio de Compra</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stocks %}
+                <tr>
+                    <td>{{ stock.id_prod.nombre }}</td>
+                    <td>{{ stock.cantidad }}</td>
+                    <td>{{ stock.id_prod.precio_compra }}Bs</td>
+                    <td>{{ stock.valor_total }}Bs</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="mt-4 text-end">Valor total del inventario: {{ valor_inventario_total }}Bs</h3>
+
+    <div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+    </div>
+</div>
+{% endblock %}

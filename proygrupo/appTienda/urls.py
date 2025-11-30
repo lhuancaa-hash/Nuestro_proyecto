@@ -19,4 +19,12 @@ urlpatterns = [
     path('productos/crear/', views.crear_producto, name='crear_producto'),
     path('productos/modificar/<int:id>/', views.modificar_producto, name='modificar_producto'),
     path('productos/eliminar/<int:id>/', views.eliminar_producto, name='eliminar_producto'),
+    path('buscar-proveedor/', views.buscar_proveedor, name='buscar_proveedor'),
+    path('productos-proveedor/<int:id_prov>/', views.productos_proveedor, name='productos_proveedor'),
+    path('historial-movimientos/', views.historial_movimientos, name='historial_movimientos'),
+    path('movimientos-dia/', views.movimientos_dia, name='movimientos_dia'),
+    path('movimientos_emp',views.listar_movimientos_emp, name='listar_movimientos_emp'),
+    path('productos_emp',views.listar_productos_emp,name='listar_productos_emp'),
+    path('stock_emp',views.listar_stock_emp,name='listar_stock_emp'),
+    path('valor_productos',views.lista_valor_productos,name='lista_valor_productos')
 ]

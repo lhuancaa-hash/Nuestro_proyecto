@@ -4,18 +4,126 @@ from .forms import MovimientoStockForm
 from .models import Stock
 from .forms import StockForm
 from django.db.models import F
-
+from django.contrib import messages
+from .forms import BuscarProveedorForm
+from .forms import FiltrarMovimientosForm
 from .models import Producto
 from .forms import ProductoForm
+from .forms import BuscarProveedorForm
+from .forms import BuscarMovimientosDiaForm
+from django.utils import timezone
+from django.db.models import Sum
+from django.db.models import FloatField
+
+
+def lista_valor_productos(request):
+    # Consulta: traer todos los stocks con info del producto
+    stocks = Stock.objects.annotate(
+        valor_total=F('cantidad') * F('id_prod__precio_compra')
+    )
+
+    # Calcular el valor total de todo el inventario
+    valor_inventario_total = stocks.aggregate(
+        total=Sum('valor_total', output_field=FloatField())
+    )['total'] or 0
+
+    context = {
+        'stocks': stocks,
+        'valor_inventario_total': valor_inventario_total,
+    }
+    return render(request, 'valor_productos.html', context)
+
+#-----Para empleado
+def listar_stock_emp(request):
+    stocks = Stock.objects.all()
+    return render(request, 'stock_emp.html', {'stocks': stocks})
+
+def listar_productos_emp(request):
+    productos = Producto.objects.all().order_by('id_prod')
+    return render(request, 'productos_emp.html', {'productos': productos})
+
+def listar_movimientos_emp(request):
+    movimientos = MovimientoStock.objects.all().order_by('id_mov')
+    return render(request, 'mov_emp.html', {'movimientos': movimientos})
+
+
+def movimientos_dia(request):
+    movimientos = []
+    form = BuscarMovimientosDiaForm(request.GET or None)
+
+    if form.is_valid():
+        fecha = form.cleaned_data['fecha']
+
+        # Convertimos la fecha a rango de inicio y fin del día
+        inicio = timezone.make_aware(timezone.datetime.combine(fecha, timezone.datetime.min.time()))
+        fin = timezone.make_aware(timezone.datetime.combine(fecha, timezone.datetime.max.time()))
+
+        movimientos = MovimientoStock.objects.filter(fecha__range=(inicio, fin)).order_by('-fecha')
+
+    return render(request, 'movimientos_dia.html', {
+        'form': form,
+        'movimientos': movimientos,
+        'fecha_seleccionada': form.cleaned_data['fecha'] if form.is_valid() else None
+    })
+
+
+def historial_movimientos(request):
+    movimientos = []
+    form = FiltrarMovimientosForm(request.GET or None)  # usamos GET para poder compartir URL
+
+    if form.is_valid():
+        fecha_inicio = form.cleaned_data['fecha_inicio']
+        fecha_fin = form.cleaned_data['fecha_fin']
+
+        movimientos = MovimientoStock.objects.filter(
+            fecha__gte=fecha_inicio,
+            fecha__lte=fecha_fin
+        ).order_by('-fecha')
+
+    return render(request, 'historial_movimientos.html', {
+        'form': form,
+        'movimientos': movimientos
+    })
+
+
+def buscar_proveedor(request):
+    if request.method == 'POST':
+        form = BuscarProveedorForm(request.POST)
+        if form.is_valid():
+            proveedor = form.cleaned_data['proveedor']
+            # Redirigimos a la página de productos de ese proveedor
+            return redirect('productos_proveedor', id_prov=proveedor.id_prov)
+    else:
+        form = BuscarProveedorForm()
+
+    return render(request, 'buscar_proveedor.html', {'form': form})
+
+def productos_proveedor(request, id_prov):
+    productos = Producto.objects.filter(id_prov_id=id_prov)
+    return render(request, 'productos_proveedor.html', {'productos': productos})
+
 
 def pagina_principal(request):
     # Traer todos los stocks con cantidad <= stock_minimo
     stocks_criticos = Stock.objects.filter(cantidad__lte=F('stock_minimo'))
+    # VALOR TOTAL DEL INVENTARIO (usando precio_compra)
+    valor_inventario = Stock.objects.aggregate(
+        total=Sum(F('cantidad') * F('id_prod__precio_compra'))
+    )['total'] or 0
 
+    productos_bajos = Stock.objects.filter(cantidad__lt=F('stock_minimo')).count()
+    productos_agotados = Stock.objects.filter(cantidad=0).count()
+    total_productos = Producto.objects.count()
     context = {
         'stocks_criticos': stocks_criticos,
         # otros contextos que ya tengas
+        'valor_inventario': valor_inventario,
+        'productos_bajos': productos_bajos,
+        'productos_agotados': productos_agotados,
+        'total_productos': total_productos,
     }
+    
+
     return render(request, 'principal.html', context)
 
 
@@ -29,8 +137,25 @@ def crear_movimiento(request):
     if request.method == 'POST':
         form = MovimientoStockForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('listar_movimientos')
+            try:
+                form.save()
+                messages.success(request, "Movimiento registrado correctamente.")
+                return redirect('listar_movimientos')
+
+            except Exception as e:
+
+                mensaje = str(e)
+
+                # Detectamos el mensaje del modelo
+                if "STOCK_INSUFICIENTE" in mensaje:
+                    stock_disponible = mensaje.split(":")[1]
+                    messages.error(
+                        request, 
+                        f"❌ Stock insuficiente. Stock actual disponible: {stock_disponible}."
+                    )
+                else:
+                    messages.error(request, "Ocurrió un error al registrar el movimiento.")
+
     else:
         form = MovimientoStockForm()
     return render(request, 'formulario_modstock.html', {'form': form, 'titulo': 'Crear Movimiento'})

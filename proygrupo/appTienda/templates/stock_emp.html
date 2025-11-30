@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock de Productos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>📦 Stock de Productos</h1>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>id_stock</th>
+                <th>id_prod</th>
+                <th>Cantidad</th>
+                <th>Ubicación</th>
+                <th>Stock Mínimo</th>           
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stocks %}
+            <tr>
+                <td>{{ s.id_stock }}</td>
+                <td>{{ s.id_prod.id_prod }}</td>
+                <td>
+                    {% if s.cantidad <= s.stock_minimo %}
+                        <span class="badge bg-danger fw-bold">{{ s.cantidad }}</span>
+                    {% else %}
+                        <span class="fw-bold">{{ s.cantidad }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ s.ubicacion|default:"-" }}</td>
+                <td>{{ s.stock_minimo }}</td>
+                
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-4">
+                    <div class="text-muted">
+                        <h4>📭 No hay registros de stock</h4>
+                        <p>Agrega productos al inventario para comenzar</p>
+                        <a href="{% url 'crear_stock' %}" class="btn btn-primary mt-2">➕ Crear Primer Stock</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    {% for s in stocks %}
+        {% if s.cantidad <= s.stock_minimo %}
+            <div class="toast show mb-2" role="alert" style="background-color: #dc3545; color: white; border-radius: 0.5rem;">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ⚠️ Stock insuficiente de {{ s.id_prod.nombre }} ({{ s.cantidad }})
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+
+{% endblock %}

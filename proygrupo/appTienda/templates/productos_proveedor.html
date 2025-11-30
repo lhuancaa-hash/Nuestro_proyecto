@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos del proveedor{% endblock %}
+
+{% block content %}
+<h1>Productos del proveedor</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio Compra</th>
+            <th>Precio Venta</th>
+            <th>Unidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for producto in productos %}
+        <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria }}</td>
+            <td>{{ producto.precio_compra }}Bs</td>
+            <td>{{ producto.precio_venta }}Bs</td>
+            <td>{{ producto.unidad_medida }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No hay productos para este proveedor</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'buscar_proveedor' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}

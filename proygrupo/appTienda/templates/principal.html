@@ -4,77 +4,198 @@
 
 {% block content %}
 
-<!-- Título de la tienda -->
-<div class="text-center my-5">
-    <h1 class="display-4">MI TIENDA WEB</h1>
-    <p class="lead">¡Bienvenido a nuestra tienda en línea!</p>
-</div>
-
-
-<div class="container my-5">
-    <div class="p-4 bg-light rounded shadow-sm">
-        <h2 class="mb-3">Para realizar las accines de inserción o creación, modificación y eliminacón</h2>
-    </div>
-</div>
-
-
-<nav class="navbar navbar-expand-lg main-nav">
-        <div class="container justify-content-center">
-            <div class="navbar-nav">
-                <a href="{% url 'listar_stock' %}" class="btn btn-lg mx-2">Stock</a>
-                <a href="{% url 'listar_movimientos' %}" class="btn btn-lg mx-2">Movimientos</a>
-                <a href="{% url 'lista_proveedores' %}" class="btn btn-lg mx-2">Proveedores</a>
-                
+    {% if user.username == 'admin1' %}
+        
+        <div class="welcome-box">
+            <div class="welcome-text">
+                Bienvenido: {{ user.username }}
             </div>
-        </div>
-    </nav>
 
-<div class="container my-5">
-    <div class="p-4 bg-light rounded shadow-sm">
-        <h2 class="mb-3">Para solo observar el listado de los datos</h2>
-    </div>
-</div>
-<nav class="navbar navbar-expand-lg main-nav">
-        <div class="container justify-content-center">
-            <div class="navbar-nav">
-                <a href="{% url 'listar_stock' %}" class="btn btn-lg mx-2">Listar stock</a>
-                <a href="{% url 'listar_movimientos' %}" class="btn btn-lg mx-2">Listar historial de movimientos</a>
-                <a href="{% url 'lista_proveedores' %}" class="btn btn-lg mx-2">Listar proveedores</a>
-            </div>
+            <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" class="logout-btn">
+                Cerrar sesión
+            </a>
         </div>
-    </nav>
+        <!-- Título de la tienda -->
+        <div class="text-center my-5">
+            <h1 class="display-4">MI TIENDA WEB</h1>
+            <p class="lead">¡Bienvenido a nuestra tienda en línea!</p>
+        </div>
 
-<br>
-<!-- Descripción del sistema -->
-<div class="container my-5">
-    <div class="p-4 bg-light rounded shadow-sm">
-        <h2 class="mb-3">Acerca del Sistema de Inventario</h2>
-        <p>
-            Este sistema de inventario está diseñado para ayudar a las empresas a gestionar sus productos de manera eficiente.
-            Permite registrar, controlar y supervisar el stock de cada producto, así como gestionar los movimientos de entradas y salidas.
-        </p>
-        <p>
-            El objetivo principal es optimizar la administración del inventario, evitando faltantes o excesos de productos,
-            y proporcionando información clara y actualizada para la toma de decisiones.
-        </p>
-        <p>
-            Con este sistema, se puede obtener un control detallado de cada bodega, conocer el stock mínimo necesario,
-            generar reportes de movimientos, y mantener un historial completo de los productos y proveedores.
-        </p>
-    </div>
-</div>
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-    {% for s in stocks_criticos %}
-        <div class="toast show mb-2" role="alert" style="background-color: #dc3545; color: white; border-radius: 0.5rem;">
-            <div class="d-flex">
-                <div class="toast-body">
-                    ⚠️ Stock insuficiente de {{ s.id_prod.nombre }} ({{ s.cantidad }})
+        <div class="container my-5">
+            <div class="row g-4">
+
+                <!-- Valor total del inventario -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-primary text-white rounded shadow-sm text-center">
+                        <h5>Valor Inventario</h5>
+                        <h2>{{ valor_inventario }} Bs</h2>
+                    </div>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+
+                <!-- Productos con bajo inventario -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-warning text-dark rounded shadow-sm text-center">
+                        <h5>Productos-Bajo Inventario</h5>
+                        <h2>{{ productos_bajos }}</h2>
+                    </div>
+                </div>
+
+                <!-- Productos agotados -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-danger text-white rounded shadow-sm text-center">
+                        <h5>Productos Agotados</h5>
+                        <h2>{{ productos_agotados }}</h2>
+                    </div>
+                </div>
+
+                <!-- Total de productos -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-success text-white rounded shadow-sm text-center">
+                        <h5>Total Productos</h5>
+                        <h2>{{ total_productos }}</h2>
+                    </div>
+                </div>
+
             </div>
         </div>
-    {% endfor %}
-</div>
 
+
+        <div class="container my-5">
+            <div class="p-4 bg-light rounded shadow-sm text-center">
+                <h2 class="mb-3">ACCIONES: CREAR, ELIMINAR, MODIFICAR</h2>
+            </div>
+        </div>
+
+
+        <nav class="navbar navbar-expand-lg main-nav">
+                <div class="container justify-content-center">
+                    <div class="navbar-nav">
+                        <a href="{% url 'listar_stock' %}" class="btn btn-lg mx-2">Stock</a>
+                        <a href="{% url 'listar_movimientos' %}" class="btn btn-lg mx-2">Movimientos</a>
+                        <a href="{% url 'lista_proveedores' %}" class="btn btn-lg mx-2">Proveedores</a>
+                        <a href="{% url 'listar_productos' %}" class="btn btn-lg mx-2">Productos</a>
+                        
+                    </div>
+                </div>
+            </nav>
+
+        <div class="container my-5">
+            <div class="p-4 bg-light rounded shadow-sm text-center">
+                <h2 class="mb-3">FUNCIONALIDADES</h2>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg main-nav">
+                <div class="container justify-content-center">
+                    <div class="navbar-nav">
+                        <a href="{% url 'lista_valor_productos' %}" class="btn btn-lg mx-2">Total precio de productos</a>
+                        <a href="{% url 'movimientos_dia' %}" class="btn btn-lg mx-2">Entradas y salidas de stock</a>
+                        <a href="{% url 'historial_movimientos' %}" class="btn btn-lg mx-2">Historial de movimientos</a>
+                        <a href="{% url 'buscar_proveedor' %}" class="btn btn-lg mx-2">Busqueda por proveedor</a>
+                    </div>
+                </div>
+            </nav>
+
+        <br>
+        
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            {% for s in stocks_criticos %}
+                <div class="toast show mb-2" role="alert" style="background-color: #dc3545; color: white; border-radius: 0.5rem;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ⚠️ Stock insuficiente de {{ s.id_prod.nombre }} ({{ s.cantidad }})
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif user.username == 'empleado1' %}
+    <div class="welcome-box">
+            <div class="welcome-text">
+                Bienvenido: {{ user.username }}
+            </div>
+
+            <a href="http://127.0.0.1:8000/admin/login/?next=/admin/" class="logout-btn">
+                Cerrar sesión
+            </a>
+        </div>
+        <!-- Título de la tienda -->
+        <div class="text-center my-5">
+            <h1 class="display-4">MI TIENDA WEB</h1>
+            <p class="lead">¡Bienvenido a nuestra tienda en línea!</p>
+        </div>
+
+        <div class="container my-5">
+            <div class="row g-4">
+
+                <!-- Valor total del inventario -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-primary text-white rounded shadow-sm text-center">
+                        <h5>Valor Inventario</h5>
+                        <h2>{{ valor_inventario }} Bs</h2>
+                    </div>
+                </div>
+
+                <!-- Productos con bajo inventario -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-warning text-dark rounded shadow-sm text-center">
+                        <h5>Productos-Bajo Inventario</h5>
+                        <h2>{{ productos_bajos }}</h2>
+                    </div>
+                </div>
+
+                <!-- Productos agotados -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-danger text-white rounded shadow-sm text-center">
+                        <h5>Productos Agotados</h5>
+                        <h2>{{ productos_agotados }}</h2>
+                    </div>
+                </div>
+
+                <!-- Total de productos -->
+                <div class="col-md-3">
+                    <div class="p-4 bg-success text-white rounded shadow-sm text-center">
+                        <h5>Total Productos</h5>
+                        <h2>{{ total_productos }}</h2>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="container my-5">
+            <div class="p-4 bg-light rounded shadow-sm text-center">
+                <h2 class="mb-3">ACCIONES QUE PUEDE REALIZAR</h2>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg main-nav">
+                <div class="container justify-content-center">
+                    <div class="navbar-nav">
+                        <a href="{% url 'listar_stock_emp' %}" class="btn btn-lg mx-2">Stock</a>
+                        <a href="{% url 'listar_movimientos_emp' %}" class="btn btn-lg mx-2">Registrar Movimiento</a>
+                        <a href="{% url 'listar_productos_emp' %}" class="btn btn-lg mx-2">Productos</a>
+                        
+                    </div>
+                </div>
+            </nav>
+
+        <br>
+        
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            {% for s in stocks_criticos %}
+                <div class="toast show mb-2" role="alert" style="background-color: #dc3545; color: white; border-radius: 0.5rem;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ⚠️ Stock insuficiente de {{ s.id_prod.nombre }} ({{ s.cantidad }})
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+    {% else %}
+        <h2>USTED NO TIENE PERMISOS PARA LA APP VENTAS</h2>
+    {% endif %}
 
 {% endblock %}

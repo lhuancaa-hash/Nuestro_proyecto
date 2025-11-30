@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-
+from django import forms
 class Proveedor(models.Model):
     id_prov = models.AutoField(primary_key=True, db_column='id_prov')
     nombre = models.CharField(max_length=100, db_column='nombre')
@@ -70,7 +70,8 @@ class MovimientoStock(models.Model):
                 stock.cantidad += self.cantidad
             elif self.tipo == 'S':  # Salida
                 if stock.cantidad < self.cantidad:
-                    raise ValueError("No hay suficiente stock para realizar esta salida.")
+                    # Indica a la vista que el stock es insuficiente
+                    raise ValueError(f"STOCK_INSUFICIENTE:{stock.cantidad}")
                 stock.cantidad -= self.cantidad
 
             stock.save()
@@ -83,24 +84,16 @@ class MovimientoStock(models.Model):
     class Meta:
         db_table = 'movimiento_stock'
 
+class BuscarProveedorForm(forms.Form):
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.all(),
+        label="Seleccione un proveedor",
+        empty_label="--- Seleccione un proveedor ---",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
 
-"""class MovimientoStock(models.Model):
-    TIPO_CHOICES = [
-        ('E', 'Entrada'),
-        ('S', 'Salida'),
-    ]
-    
-    id_mov = models.AutoField(primary_key=True, db_column='id_mov')
-    id_prod = models.ForeignKey(Producto, on_delete=models.CASCADE, db_column='id_prod')
-    tipo = models.CharField(max_length=1, choices=TIPO_CHOICES, db_column='tipo')
-    cantidad = models.IntegerField(validators=[MinValueValidator(1)], db_column='cantidad')
-    fecha = models.DateTimeField(auto_now_add=True, db_column='fecha')
-    usuario = models.CharField(max_length=100, blank=True, null=True, db_column='usuario')
-    motivo = models.CharField(max_length=200, blank=True, null=True, db_column='motivo')
-
-    def __str__(self):
-        return f"{self.get_tipo_display()} - {self.id_prod.nombre} - {self.cantidad}"
-
-    class Meta:
-        db_table = 'movimiento_stock'"""
-
+class BuscarMovimientosDiaForm(forms.Form):
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        label="Seleccione una fecha"
+    )
