@@ -102,3 +102,27 @@ class ProveedorForm(forms.ModelForm):
             'direccion': 'Dirección',
             'rubro': 'Rubro',
         }
+
+class BuscarProveedorForm(forms.Form):
+    proveedor = forms.ModelChoiceField(
+        queryset=Proveedor.objects.all(),
+        label="Seleccione un proveedor",
+        empty_label="--- Seleccione un proveedor ---",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
+class FiltrarMovimientosForm(forms.Form):
+    fecha_inicio = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+        label="Fecha y hora inicio"
+    )
+    fecha_fin = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+        label="Fecha y hora fin"
+    )
+
+class BuscarMovimientosDiaForm(forms.Form):
+    fecha = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        label="Seleccione una fecha"
+    )
