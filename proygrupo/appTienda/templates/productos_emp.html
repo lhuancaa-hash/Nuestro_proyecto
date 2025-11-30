@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Lista de Productos</h1>
+
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio Venta</th>
+            <th>Unidad</th>
+            <th>Proveedor</th>
+            
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for p in productos %}
+        <tr>
+            <td>{{ p.id_prod }}</td>
+            <td>{{ p.nombre }}</td>
+            <td>{{ p.categoria }}</td>
+            <td>{{ p.precio_venta }}</td>
+            <td>{{ p.unidad_medida }}</td>
+            <td>{{ p.id_prov.nombre }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="text-center">No hay productos registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+</div>
+
+{% endblock %}

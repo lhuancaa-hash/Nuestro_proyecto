@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar Proveedor{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6"> <!-- ancho compacto -->
+            <h3 class="mb-4 text-center">Buscar Proveedor</h3>
+            <form method="post" class="p-4 border rounded shadow-sm bg-light">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.proveedor.label_tag }}
+                    {{ form.proveedor }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Mostrar productos</button>
+            </form>
+        </div>
+    </div>
+    <div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Entradas y Salidas de stock del Día{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Entradas y Salídas de Stock por Día</h2>
+
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            {{ form.fecha.label_tag }}
+            {{ form.fecha }}
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </form>
+
+    {% if fecha_seleccionada %}
+    <h5>Movimientos del {{ fecha_seleccionada|date:"d/m/Y" }}</h5>
+    {% endif %}
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Producto</th>
+                <th>Tipo de Movimiento</th>
+                <th>Cantidad</th>
+                <th>Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.id_prod.nombre }}</td>
+                <td>
+                    <span class="badge {% if m.tipo == 'E' %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ m.get_tipo_display }}
+                    </span>
+                </td>
+                <td>{{ m.cantidad }}</td>
+                <td>{{ m.fecha|date:"H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No hay movimientos para esta fecha</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+    </div>
+</div>
+{% endblock %}

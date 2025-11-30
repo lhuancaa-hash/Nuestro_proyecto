@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Historial de Movimientos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Filtrar movimientos por fecha y hora</h2>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-5">
+            {{ form.fecha_inicio.label_tag }}
+            {{ form.fecha_inicio }}
+        </div>
+        <div class="col-md-5">
+            {{ form.fecha_fin.label_tag }}
+            {{ form.fecha_fin }}
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Producto</th>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Motivo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in movimientos %}
+            <tr>
+                <td>{{ m.id_mov }}</td>
+                <td>{{ m.id_prod.nombre }}</td>
+                <td>
+                    <span class="badge {% if m.tipo == 'E' %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ m.get_tipo_display }}
+                    </span>
+                </td>
+                <td>{{ m.cantidad }}</td>
+                <td>{{ m.fecha|date:"d/m/Y H:i" }}</td>
+                <td>{{ m.usuario|default:"Sin usuario" }}</td>
+                <td>{{ m.motivo|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay movimientos en este intervalo</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="navbar-nav">
+    <a href="{% url 'pagina_principal' %}" class="btn btn-lg mx-2">Volver al inicio</a>
+        
+    </div>
+</div>
+{% endblock %}
